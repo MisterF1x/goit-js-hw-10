@@ -36,7 +36,6 @@ function onInputSearch(e) {
       }
       clearContent();
       render(response, listTlp, refs.list);
-      console.log(response);
     })
     .catch(errNotify);
 }
@@ -47,8 +46,14 @@ function onListClick(e) {
   let name = e.target.dataset.value;
   fetchCountries(name)
     .then(response => {
+      const findedCountry = response.find(country => {
+        return country.name.common === name;
+      });
       clearContent();
-      render(response, countryTpl, refs.countryDiv);
+      refs.countryDiv.insertAdjacentHTML(
+        'beforeend',
+        countryTpl(findedCountry)
+      );
     })
     .catch(errNotify);
 }
@@ -56,6 +61,7 @@ function onListClick(e) {
 function errNotify(err) {
   Notify.failure('Oops, there is no country with that name');
   console.log(err);
+  clearContent();
 }
 
 function clearContent() {
@@ -67,9 +73,8 @@ function render(data, template, elToInsert) {
   const tlp = data.map(template).join('');
   elToInsert.insertAdjacentHTML('beforeend', tlp);
 }
-
 function listTlp(data) {
-  return `<li data-value='${data.name.official}'>
+  return `<li data-value='${data.name.common}'>
     <img class="flag" src="${data.flags.svg}">
     ${data.name.official}
   </li>`;
