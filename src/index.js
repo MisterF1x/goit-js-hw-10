@@ -36,6 +36,7 @@ function onInputSearch(e) {
       }
       clearContent();
       render(response, listTlp, refs.list);
+      console.log(response);
     })
     .catch(errNotify);
 }
@@ -68,7 +69,7 @@ function render(data, template, elToInsert) {
 }
 
 function listTlp(data) {
-  return `<li data-value='${data.name.common}'>
+  return `<li data-value='${data.name.official}'>
     <img class="flag" src="${data.flags.svg}">
     ${data.name.official}
   </li>`;
